@@ -1,0 +1,43 @@
+*{
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    margin:0;
+    background:#f1f3f4;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.card{
+    width:380px;
+    background:#fff;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+}
+
+.hidden{
+    display:none;
+}
+
+.verify{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.checkbox{
+    width:24px;
+    height:24px;
+}
+
+.logo{
+    margin-left:auto;
+    color:#666;
+    font-size:12px;
+    text-align:right;
+}
