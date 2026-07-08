@@ -28,14 +28,26 @@
     <!-- Step 2 -->
     <div id="captcha" class="hidden">
 
+        <h2>Word Verification</h2>
+
+        <canvas id="canvas" width="250" height="80"></canvas>
+
+        <input
+            id="answer"
+            type="text"
+            placeholder="Enter the word shown above">
+
+        <div class="message" id="msg"></div>
 
     </div>
 
     <!-- Finished -->
     <div id="done" class="hidden success">
-
-
+      <h2>✅ Verification Complete</h2>
+      <p>You have successfully completed the demo verification.</p>
+      <button onclick="location.reload()">Restart</button>
     </div>
+  
   </div>
 </body>
 </html>
