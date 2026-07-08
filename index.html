@@ -4,50 +4,60 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Verification Demo</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
 </head>
 <body>
+
   <div class="card">
-    <!-- Step 1 -->
-    <div id="step1">
-        <div class="verify">
-            <input type="checkbox" id="check" class="checkbox">
-            <label for="check">I am not a robot</label>
 
-            <div class="logo">
-                Demo Verification
-            </div>
-        </div>
-    </div>
+  <!-- Step 1 -->
+  <div id="step1">
+      <div class="verify">
+          <input type="checkbox" id="check" class="checkbox">
+          <label for="check">I am not a robot</label>
 
-    <!-- Loading -->
-    <div id="loading" class="hidden">
-        <div class="loader"></div>
-        <p style="text-align:center;">Verifying...</p>
-    </div>
+          <div class="logo">
+              Demo Verification
+          </div>
+      </div>
+  </div>
 
-    <!-- Step 2 -->
-    <div id="captcha" class="hidden">
+  <!-- Loading -->
+  <div id="loading" class="hidden">
+      <div class="loader"></div>
+      <p style="text-align:center;">Verifying...</p>
+  </div>
 
-        <h2>Word Verification</h2>
+  <!-- Step 2 -->
+  <div id="captcha" class="hidden">
 
-        <canvas id="canvas" width="250" height="80"></canvas>
+      <h2>Word Verification</h2>
 
-        <input
-            id="answer"
-            type="text"
-            placeholder="Enter the word shown above">
+      <canvas id="canvas" width="250" height="80"></canvas>
 
-        <div class="message" id="msg"></div>
+      <input
+          id="answer"
+          type="text"
+          placeholder="Enter the word shown above">
 
-    </div>
+      <button onclick="verify()">Verify</button>
 
-    <!-- Finished -->
-    <div id="done" class="hidden success">
-      <h2>✅ Verification Complete</h2>
-      <p>You have successfully completed the demo verification.</p>
-      <button onclick="location.reload()">Restart</button>
-    </div>
-  
+      <div class="message" id="msg"></div>
+
+  </div>
+
+  <!-- Finished -->
+  <div id="done" class="hidden success">
+
+  <h2>✅ Verification Complete</h2>
+
+  <p>You have successfully completed the demo verification.</p>
+
+  <button onclick="location.reload()">Restart</button>
+
+  </div>
+
   </div>
 </body>
 </html>
