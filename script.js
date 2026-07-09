@@ -1,119 +1,304 @@
+// CAPTCHA VARIABLES
 
-const words=[
-  "APPLE",
-  "ORANGE",
-  "TIGER",
-  "PLANET",
-  "ROCKET",
-  "PURPLE",
-  "WINDOW",
-  "FLOWER",
-  "GARDEN",
-  "BUTTON"
-];
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-let currentWord="";
+const answerInput = document.getElementById("answer");
 
-document.getElementById("check").addEventListener("change",function(){
+let currentWord = "";
 
-  document.getElementById("step1").classList.add("hidden");
-  document.getElementById("loading").classList.remove("hidden");
+let expiresAt = 0;
 
-  setTimeout(()=>{
+let attempts = 0;
 
-  document.getElementById("loading").classList.add("hidden");
-  document.getElementById("captcha").classList.remove("hidden");
+let locked = false;
 
-  generateCaptcha();
+const MAX_ATTEMPTS = 5;
 
-  },2500);
+const CAPTCHA_TIME = 60000; // 60 seconds
 
-});
+// RANDOM CAPTCHA
 
-function generateCaptcha(){
+function randomCaptcha(length = 6){
 
-  const canvas=document.getElementById("canvas");
-  const ctx=canvas.getContext("2d");
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+    const random = new Uint32Array(length);
 
-  ctx.fillStyle="#f7f7f7";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
+    crypto.getRandomValues(random);
 
-  currentWord=words[Math.floor(Math.random()*words.length)];
+    let text = "";
 
-  ctx.font="bold 36px Arial";
+    for(let i=0;i<length;i++){
 
-  for(let i=0;i<currentWord.length;i++){
+        text += chars[random[i] % chars.length];
 
-  ctx.save();
+    }
 
-  const x=20+i*35;
-  const y=50;
-
-  ctx.translate(x,y);
-
-  ctx.rotate((Math.random()-0.5)*0.5);
-
-  ctx.fillStyle=`rgb(${50+Math.random()*100},
-  ${50+Math.random()*100},
-  ${50+Math.random()*100})`;
-
-  ctx.fillText(currentWord[i],0,0);
-
-  ctx.restore();
-
-  }
-
-  for(let i=0;i<8;i++){
-
-    ctx.beginPath();
-
-    ctx.moveTo(Math.random()*250,Math.random()*80);
-    ctx.lineTo(Math.random()*250,Math.random()*80);
-
-    ctx.strokeStyle="#999";
-
-    ctx.stroke();
-
-  }
-
-  for(let i=0;i<300;i++){
-
-    ctx.fillStyle="#999";
-
-    ctx.fillRect(
-    Math.random()*250,
-    Math.random()*80,
-    1,
-    1
-    );
-
-  }
+    return text;
 
 }
 
+// DRAW CAPTCHA
+
+function generateCaptcha(){
+
+    currentWord = randomCaptcha();
+
+    expiresAt = Date.now() + CAPTCHA_TIME;
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    ctx.fillStyle="#f7f7f7";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    // Random lines
+
+    for(let i=0;i<12;i++){
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            Math.random()*canvas.width,
+            Math.random()*canvas.height
+        );
+
+        ctx.lineTo(
+            Math.random()*canvas.width,
+            Math.random()*canvas.height
+        );
+
+        ctx.strokeStyle=`rgba(
+            ${Math.random()*255},
+            ${Math.random()*255},
+            ${Math.random()*255},
+            .5
+        )`;
+
+        ctx.lineWidth=1+Math.random()*2;
+
+        ctx.stroke();
+
+    }
+
+    // Characters
+
+    for(let i=0;i<currentWord.length;i++){
+
+        ctx.save();
+
+        const x = 18 + i*35;
+
+        const y = 45 + (Math.random()*15-7);
+
+        ctx.translate(x,y);
+
+        ctx.rotate((Math.random()-.5)*0.7);
+
+        ctx.font=`bold ${28+Math.random()*10}px Arial`;
+
+        ctx.fillStyle=`rgb(
+            ${40+Math.random()*120},
+            ${40+Math.random()*120},
+            ${40+Math.random()*120}
+        )`;
+
+        ctx.fillText(currentWord[i],0,0);
+
+        ctx.restore();
+
+    }
+
+    // Noise dots
+
+    for(let i=0;i<700;i++){
+
+        ctx.fillStyle=`rgba(
+            ${Math.random()*255},
+            ${Math.random()*255},
+            ${Math.random()*255},
+            .8
+        )`;
+
+        ctx.fillRect(
+
+            Math.random()*canvas.width,
+
+            Math.random()*canvas.height,
+
+            1,
+
+            1
+
+        );
+
+    }
+
+    answerInput.value="";
+
+    document.getElementById("msg").textContent="";
+
+}
+
+// START
+
+document.getElementById("check").addEventListener("change",function(){
+
+    document.getElementById("step1").classList.add("hidden");
+
+    document.getElementById("loading").classList.remove("hidden");
+
+    setTimeout(()=>{
+
+        document.getElementById("loading").classList.add("hidden");
+
+        document.getElementById("captcha").classList.remove("hidden");
+
+        generateCaptcha();
+
+    },2500);
+
+});
+
+// INPUT SECURITY
+// Only allow CAPTCHA characters
+answerInput.addEventListener("input", function(){
+
+    this.value = this.value
+        .toUpperCase()
+        .replace(/[^A-Z0-9]/g,"")
+        .slice(0,6);
+
+});
+
+
+// Prevent paste attacks
+answerInput.addEventListener("paste", function(e){
+
+    e.preventDefault();
+
+});
+
+
+// Prevent drag and drop
+answerInput.addEventListener("drop", function(e){
+
+    e.preventDefault();
+
+});
+
+
+// VERIFY CAPTCHA
+
 function verify(){
 
-const value=document
-.getElementById("answer")
-.value
-.trim()
-.toUpperCase();
+    if(locked){
+        return;
+    }
 
-if(value===currentWord){
 
-  document.getElementById("captcha").classList.add("hidden");
-  document.getElementById("done").classList.remove("hidden");
+    locked = true;
 
-  }else{
 
-  document.getElementById("msg").textContent="Incorrect word. Try again.";
+    // Slow repeated attempts
 
-  generateCaptcha();
+    setTimeout(()=>{
 
-  document.getElementById("answer").value="";
+        locked=false;
 
-  }
+    },1000);
+
+
+
+    const value = answerInput.value.trim().toUpperCase();
+
+
+
+    // Check expiration
+
+    if(Date.now() > expiresAt){
+
+        document.getElementById("msg").textContent =
+        "CAPTCHA expired. New CAPTCHA generated.";
+
+        generateCaptcha();
+
+        return;
+
+    }
+
+
+
+    // Empty input
+
+    if(value.length === 0){
+
+        document.getElementById("msg").textContent =
+        "Please enter the CAPTCHA.";
+
+        locked=false;
+
+        return;
+
+    }
+
+
+
+    attempts++;
+
+
+
+    // Attempt limit
+
+    if(attempts > MAX_ATTEMPTS){
+
+        document.getElementById("msg").textContent =
+        "Too many attempts. Restart verification.";
+
+        answerInput.disabled=true;
+
+        document.querySelector("button").disabled=true;
+
+        return;
+
+    }
+
+
+
+    // Correct
+
+    if(value === currentWord){
+
+
+        // Destroy CAPTCHA after success
+
+        currentWord="";
+
+
+        document.getElementById("captcha")
+        .classList.add("hidden");
+
+
+        document.getElementById("done")
+        .classList.remove("hidden");
+
+
+    }
+
+
+    // Incorrect
+
+    else{
+
+
+        document.getElementById("msg").textContent =
+        "Incorrect CAPTCHA. Try again.";
+
+
+        generateCaptcha();
+
+
+    }
+
 
 }

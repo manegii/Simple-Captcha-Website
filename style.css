@@ -33,6 +33,7 @@ body{
 .checkbox{
     width:24px;
     height:24px;
+    cursor:pointer;
 }
 
 .logo{
@@ -63,6 +64,8 @@ canvas{
     margin:20px auto;
     border:1px solid #ccc;
     border-radius:6px;
+    background:#f8f8f8;
+    user-select:none;
 }
 
 input[type=text]{
@@ -72,6 +75,12 @@ input[type=text]{
     border:1px solid #bbb;
     border-radius:6px;
     font-size:16px;
+    text-transform:uppercase;
+    outline:none;
+}
+
+input[type=text]:focus{
+    border-color:#4285f4;
 }
 
 button{
@@ -84,16 +93,24 @@ button{
     border-radius:6px;
     cursor:pointer;
     font-size:16px;
+    transition:.2s;
 }
 
 button:hover{
     background:#2d73e0;
 }
 
+button:disabled{
+    background:#999;
+    cursor:not-allowed;
+}
+
 .message{
     margin-top:12px;
     text-align:center;
     color:#d22;
+    min-height:20px;
+    font-size:14px;
 }
 
 .success{
@@ -103,4 +120,18 @@ button:hover{
 
 h2{
     text-align:center;
+}
+
+/* Prevent selecting the CAPTCHA */
+canvas,
+.logo,
+label{
+    user-select:none;
+    -webkit-user-select:none;
+}
+
+/* Disable drag highlighting */
+img,
+canvas{
+    -webkit-user-drag:none;
 }

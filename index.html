@@ -8,56 +8,89 @@
   <script src="script.js" defer></script>
 </head>
 <body>
+<div class="card">
+    <!-- Step 1 -->
+    <div id="step1">
+        <div class="verify">
 
-  <div class="card">
+            <input
+                type="checkbox"
+                id="check"
+                class="checkbox">
 
-  <!-- Step 1 -->
-  <div id="step1">
-      <div class="verify">
-          <input type="checkbox" id="check" class="checkbox">
-          <label for="check">I am not a robot</label>
+            <label for="check">I am not a robot</label>
 
-          <div class="logo">
-              Demo Verification
-          </div>
-      </div>
-  </div>
+            <div class="logo">
+                Demo Verification
+            </div>
 
-  <!-- Loading -->
-  <div id="loading" class="hidden">
-      <div class="loader"></div>
-      <p style="text-align:center;">Verifying...</p>
-  </div>
+        </div>
+    </div>
 
-  <!-- Step 2 -->
-  <div id="captcha" class="hidden">
+    <!-- Loading -->
 
-      <h2>Word Verification</h2>
+    <div id="loading" class="hidden">
 
-      <canvas id="canvas" width="250" height="80"></canvas>
+        <div class="loader"></div>
 
-      <input
-          id="answer"
-          type="text"
-          placeholder="Enter the word shown above">
+        <p style="text-align:center;">
+            Verifying...
+        </p>
 
-      <button onclick="verify()">Verify</button>
+    </div>
 
-      <div class="message" id="msg"></div>
+    <!-- CAPTCHA -->
 
-  </div>
+    <div id="captcha" class="hidden">
 
-  <!-- Finished -->
-  <div id="done" class="hidden success">
+        <h2>Word Verification</h2>
 
-  <h2>✅ Verification Complete</h2>
+        <canvas
+            id="canvas"
+            width="250"
+            height="80">
+        </canvas>
 
-  <p>You have successfully completed the demo verification.</p>
+        <input
+            id="answer"
+            type="text"
+            maxlength="6"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="characters"
+            spellcheck="false"
+            placeholder="Enter the CAPTCHA">
 
-  <button onclick="location.reload()">Restart</button>
+        <button onclick="verify()">
+            Verify
+        </button>
 
-  </div>
+        <div
+            class="message"
+            id="msg">
+        </div>
 
-  </div>
+    </div>
+
+    <!-- Success -->
+
+    <div
+        id="done"
+        class="hidden success">
+
+        <h2>✅ Verification Complete</h2>
+
+        <p>
+            You have successfully completed the demo verification.
+        </p>
+
+        <button onclick="location.reload()">
+            Restart
+        </button>
+
+    </div>
+
+</div>
+
 </body>
 </html>
